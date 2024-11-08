@@ -1,3 +1,5 @@
+using DAL.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace API
 {
@@ -14,7 +16,17 @@ namespace API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Adding connection to database
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
+
             var app = builder.Build();
+
+            // Adding auto update-database
+            using var serviceScope = app.Services.CreateScope();
+            var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+            context.Database.Migrate();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
