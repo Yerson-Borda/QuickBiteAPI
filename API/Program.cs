@@ -1,3 +1,4 @@
+using BLL.Services;
 using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,19 @@ namespace API
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
+
+            // Adding identity configuration for working with register and login
+            builder.Services.AddIdentity<User, Role>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 6;
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            // Adding own business logic services
+            builder.Services.AddScoped<IUsersService, UsersService>();
 
             var app = builder.Build();
 
