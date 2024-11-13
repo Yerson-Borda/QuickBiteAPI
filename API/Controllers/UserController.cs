@@ -1,6 +1,8 @@
 ﻿using BLL.Services;
 using DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -13,6 +15,7 @@ namespace API.Controllers
         {
             _usersService = usersService;
         }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserCreateDto model)
         {
@@ -50,6 +53,15 @@ namespace API.Controllers
             {
                 return Problem();
             }
+        }
+
+        // Use the token generated in this case by login to go to profile
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<IActionResult> Profile()
+        {
+            var emailClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
+            return Ok(await _usersService.GetProfile(emailClaim.Value));
         }
     }
 }

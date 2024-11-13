@@ -14,6 +14,7 @@ namespace BLL.Services
     {
         Task Register(UserCreateDto model);
         Task<string> Login(LoginCredentialsDto model);
+        Task<UserPublicModelDto> GetProfile(string email);
     }
 
     public class UsersService : IUsersService
@@ -51,6 +52,23 @@ namespace BLL.Services
             var user = await ValidateUser(model);
             return GenerateToken(user);
         }
+
+        public async Task<UserPublicModelDto> GetProfile(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with email: {email} was not found!");
+            }
+            // Return everytime a new DTO, because if we recycle model they may contain sensitive information for the frontend - user
+            return new UserPublicModelDto
+            {
+                BirthDate = user.BirthDate,
+                Email = user.Email,
+                Name = user.Name
+            };
+        }
+
         private async Task<User> ValidateUser(LoginCredentialsDto credentials)
         {
             var identityUser = await _userManager.FindByEmailAsync(credentials.Email);
