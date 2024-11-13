@@ -16,6 +16,7 @@ namespace BLL.Services
         Task Register(UserCreateDto model);
         Task<string> Login(LoginCredentialsDto model);
         Task<UserPublicModelDto> GetProfile(string email);
+        Task UpdateProfile(string email, EditProfileDto model);
     }
 
     public class UsersService : IUsersService
@@ -70,6 +71,24 @@ namespace BLL.Services
                 Email = user.Email,
                 Name = user.Name
             };
+        }
+
+        public async Task UpdateProfile(string email, EditProfileDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with email: {email} was not found!");
+            }
+
+            user.Name = model.Name;
+            user.BirthDate = DateOnly.FromDateTime(model.BirthDate);
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new Exception($"Some errors during updating user! Data: {result.Errors}");
+            }
         }
 
         private async Task<User> ValidateUser(LoginCredentialsDto credentials)
