@@ -11,9 +11,11 @@ namespace API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUsersService _usersService;
-        public UserController(IUsersService usersService)
+        private readonly ITokenService _tokenService;
+        public UserController(IUsersService usersService, ITokenService tokenService)
         {
             _usersService = usersService;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -62,6 +64,22 @@ namespace API.Controllers
         {
             var emailClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
             return Ok(await _usersService.GetProfile(emailClaim.Value));
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                var userIdClaim = User.Claims.FirstOrDefault(x => x.Type == "Id");
+                await _tokenService.Logout(Guid.Parse(userIdClaim.Value));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Problem();
+            }
         }
     }
 }

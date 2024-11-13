@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services
 {
@@ -21,10 +22,12 @@ namespace BLL.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly JwtBearerTokenSettings _jwtTokenSettings;
-        public UsersService(UserManager<User> userManager, IOptions<JwtBearerTokenSettings> options)
+        private readonly ApplicationDbContext _context;
+        public UsersService(UserManager<User> userManager, IOptions<JwtBearerTokenSettings> options, ApplicationDbContext context)
         {
             _userManager = userManager;
             _jwtTokenSettings = options.Value;
+            _context = context;
         }
         public async Task Register(UserCreateDto model)
         {
@@ -50,7 +53,7 @@ namespace BLL.Services
         public async Task<string> Login(LoginCredentialsDto model)
         {
             var user = await ValidateUser(model);
-            return GenerateToken(user);
+            return await GenerateToken(user);
         }
 
         public async Task<UserPublicModelDto> GetProfile(string email)
@@ -83,7 +86,7 @@ namespace BLL.Services
             }
             throw new ArgumentException("Login data was incorrect");
         }
-        private string GenerateToken(User user)
+        private async Task<string> GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtTokenSettings.SecretKey);
@@ -95,11 +98,19 @@ namespace BLL.Services
                 Subject = new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.Name)
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim("Id", user.Id.ToString()),
                 }),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
+
+            var logoutIds = await _context.LogoutUsers
+                .Where(x => x.Identifier == user.Id && !x.DeleteDateTime.HasValue)
+                .ToListAsync();
+            _context.LogoutUsers.RemoveRange(logoutIds);
+            await _context.SaveChangesAsync();
+
             var token = tokenHandler.CreateToken(descriptor);
             var userToken = tokenHandler.WriteToken(token);
             return userToken;

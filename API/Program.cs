@@ -1,3 +1,4 @@
+using API.Middlewares;
 using BLL.Configuration;
 using BLL.Services;
 using DAL.Data;
@@ -39,6 +40,7 @@ namespace API
 
             // Adding own business logic services
             builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
             // Configure JWT
             var jwtSection = builder.Configuration.GetSection("JwtBearerTokenSettings");
@@ -77,6 +79,11 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
+
+            // Adding middleware
+            app.UseMiddleware<TokenValidationMiddleware>();
+
+
             app.UseAuthorization();
 
 
