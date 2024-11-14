@@ -41,8 +41,11 @@ namespace BLL.Services
             {
                 Name = model.Name,
                 Email = model.Email,
-                BirthDate = DateOnly.FromDateTime(model.BirthDate),
-                UserName = model.Email
+                Address = model.Address,
+                Gender =  model.Gender,
+                BirthDate = model.BirthDate.HasValue ? DateOnly.FromDateTime(model.BirthDate.Value) : default,
+                UserName = model.Email,
+                PhoneNumber = model.PhoneNumber
             };
             var result = await _userManager.CreateAsync(identityUser, model.Password);
             if (!result.Succeeded)
@@ -69,7 +72,10 @@ namespace BLL.Services
             {
                 BirthDate = user.BirthDate,
                 Email = user.Email,
-                Name = user.Name
+                Name = user.Name,
+                Gender = user.Gender,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber
             };
         }
 
@@ -83,6 +89,9 @@ namespace BLL.Services
 
             user.Name = model.Name;
             user.BirthDate = DateOnly.FromDateTime(model.BirthDate);
+            user.Gender = model.Gender;
+            user.Address = model.Address;
+            user.PhoneNumber = model.PhoneNumber;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
