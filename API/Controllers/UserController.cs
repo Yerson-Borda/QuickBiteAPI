@@ -100,7 +100,7 @@ namespace API.Controllers
             try
             {
                 await _usersService.UpdateProfile(email, model);
-                return NoContent();
+                return Ok();
             }
             catch (KeyNotFoundException ex)
             {
