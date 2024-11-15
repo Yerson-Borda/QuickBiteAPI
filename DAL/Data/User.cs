@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using DTO.Enums;
 
 namespace DAL.Data
 {
@@ -9,5 +10,7 @@ namespace DAL.Data
         public DateTime CreateDateTime { get; set; }
         public DateTime ModifyDateTime { get; set; }
         public DateTime? DeleteDateTime { get; set; }
+        public Gender Gender { get; set; }
+        public string? Address { get; set; }
     }
 }
