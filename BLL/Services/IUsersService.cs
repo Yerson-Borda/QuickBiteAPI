@@ -1,6 +1,5 @@
 ﻿using BLL.Configuration;
 using DAL.Data;
-using DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using DTO.UserDtos;
 
 namespace BLL.Services
 {

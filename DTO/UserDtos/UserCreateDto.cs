@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using DTO.Enums;
 
-namespace DTO
+namespace DTO.UserDtos
 {
     public class UserCreateDto
     {

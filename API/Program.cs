@@ -41,6 +41,7 @@ namespace API
             // Adding own business logic services
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<IDishService, DishService>();
 
             // Configure JWT
             var jwtSection = builder.Configuration.GetSection("JwtBearerTokenSettings");

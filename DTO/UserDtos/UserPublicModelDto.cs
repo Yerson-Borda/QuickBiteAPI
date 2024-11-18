@@ -1,6 +1,6 @@
 ﻿using DTO.Enums;
 
-namespace DTO
+namespace DTO.UserDtos
 {
     public class UserPublicModelDto
     {
