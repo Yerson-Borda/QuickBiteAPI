@@ -28,5 +28,23 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDishById(Guid id)
+        {
+            try
+            {
+                var dish = await _dishService.GetDishById(id);
+                if (dish == null)
+                {
+                    return NotFound();
+                }
+                return Ok(dish);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

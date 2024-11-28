@@ -8,6 +8,7 @@ namespace BLL.Services
     public interface IDishService
     {
         Task<PagedResponse<DishDto>> GetDishes(List<Category> categories, bool? vegetarian, Sorting? sorting, int page);
+        Task<DishDto> GetDishById(Guid id);
     }
 
     public class DishService : IDishService
@@ -21,7 +22,7 @@ namespace BLL.Services
 
         public async Task<PagedResponse<DishDto>> GetDishes(List<Category> categories, bool? vegetarian, Sorting? sorting, int page)
         {
-            int pageSize = 10; // Define a default page size
+            int pageSize = 10;
 
             var query = _context.Dishes.AsQueryable();
 
@@ -88,6 +89,26 @@ namespace BLL.Services
             };
 
             return response;
+        }
+
+        public async Task<DishDto> GetDishById(Guid id)
+        {
+            var dish = await _context.Dishes.FindAsync(id);
+            if (dish == null)
+            {
+                return null;
+            }
+
+            return new DishDto
+            {
+                Name = dish.Name,
+                Description = dish.Description,
+                Price = dish.Price,
+                ImageUrl = dish.ImageUrl,
+                IsVegetarian = dish.IsVegetarian,
+                Rating = dish.Rating,
+                Category = dish.Category
+            };
         }
     }
 }
