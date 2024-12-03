@@ -67,6 +67,7 @@ namespace BLL.Services
                 .Take(pageSize)
                 .Select(d => new DishDto
                 {
+                    Id = d.Id,
                     Name = d.Name,
                     Description = d.Description,
                     Price = d.Price,
@@ -101,6 +102,7 @@ namespace BLL.Services
 
             return new DishDto
             {
+                Id = dish.Id,
                 Name = dish.Name,
                 Description = dish.Description,
                 Price = dish.Price,

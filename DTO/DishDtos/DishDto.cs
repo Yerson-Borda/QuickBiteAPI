@@ -6,6 +6,8 @@ namespace DTO.DishDtos
 {
     public class DishDto
     {
+        [JsonPropertyName("id")]
+        public Guid Id { get; set; }
         [JsonPropertyName("name")]
         [Required]
         public string Name { get; set; }
