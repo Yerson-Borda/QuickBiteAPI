@@ -45,10 +45,10 @@ namespace BLL.Services
                     query = query.OrderByDescending(d => d.Price);
                     break;
                 case Sorting.RatingAsc:
-                    query = query.OrderBy(d => d.Rating);
+                    query = query.OrderBy(d => d.RatingList.Average(r => r.Value));
                     break;
                 case Sorting.RatingDesc:
-                    query = query.OrderByDescending(d => d.Rating);
+                    query = query.OrderByDescending(d => d.RatingList.Average(r => r.Value));
                     break;
                 case Sorting.NameAsc:
                     query = query.OrderBy(d => d.Name);
@@ -73,10 +73,15 @@ namespace BLL.Services
                     Price = d.Price,
                     ImageUrl = d.ImageUrl,
                     IsVegetarian = d.IsVegetarian,
-                    Rating = d.Rating,
+                    Rating = d.RatingList.Select(r => new RatingDto
+                    {
+                        DishId = r.DishId,
+                        Value = r.Value
+                    }).ToList(),
                     Category = d.Category
                 })
                 .ToListAsync();
+
 
             var response = new PagedResponse<DishDto>
             {
@@ -94,7 +99,10 @@ namespace BLL.Services
 
         public async Task<DishDto> GetDishById(Guid id)
         {
-            var dish = await _context.Dishes.FindAsync(id);
+            var dish = await _context.Dishes
+                .Include(d => d.RatingList) // Include RatingList to load related ratings
+                .FirstOrDefaultAsync(d => d.Id == id);
+
             if (dish == null)
             {
                 return null;
@@ -108,9 +116,14 @@ namespace BLL.Services
                 Price = dish.Price,
                 ImageUrl = dish.ImageUrl,
                 IsVegetarian = dish.IsVegetarian,
-                Rating = dish.Rating,
+                Rating = dish.RatingList.Select(r => new RatingDto
+                {
+                    DishId = r.DishId,
+                    Value = r.Value
+                }).ToList(),
                 Category = dish.Category
             };
         }
+
     }
 }
