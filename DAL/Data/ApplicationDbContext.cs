@@ -8,17 +8,26 @@ namespace DAL.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-
         }
 
         public override DbSet<User> Users { get; set; }
         public override DbSet<Role> Roles { get; set; }
         public DbSet<LogoutUser> LogoutUsers { get; set; }
-
         public DbSet<Dish> Dishes { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<Rating> Rating { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configure the one-to-many relationship between Dish and Rating
+            modelBuilder.Entity<Dish>()
+                .HasMany(d => d.RatingList)
+                .WithOne()
+                .HasForeignKey(r => r.DishId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public override int SaveChanges()

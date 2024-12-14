@@ -42,6 +42,10 @@ namespace API
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IDishService, DishService>();
+            builder.Services.AddScoped<IBasketService, BasketService>();
+
+            // Add IHttpContextAccessor for accessing HttpContext in services
+            builder.Services.AddHttpContextAccessor();
 
             // Configure JWT
             var jwtSection = builder.Configuration.GetSection("JwtBearerTokenSettings");
