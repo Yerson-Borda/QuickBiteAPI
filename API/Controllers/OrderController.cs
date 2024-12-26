@@ -17,6 +17,24 @@ namespace API.Controllers
             _orderService = orderService;
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<OrderDto>> GetOrderById(Guid id)
+        {
+            var order = await _orderService.GetOrderById(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return Ok(order);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<OrderInfoDto>>> GetUserOrders()
+        {
+            var orders = await _orderService.GetUserOrders();
+            return Ok(orders);
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateOrder([FromBody] OrderCreateDto orderCreateDto)
         {
@@ -26,13 +44,6 @@ namespace API.Controllers
                 return BadRequest(result.ErrorMessage);
             }
             return Ok(new { result.OrderId });
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<List<OrderInfoDto>>> GetUserOrders()
-        {
-            var orders = await _orderService.GetUserOrders();
-            return Ok(orders);
         }
 
         [HttpPost("{id}/status")]
