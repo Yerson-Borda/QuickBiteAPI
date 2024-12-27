@@ -43,6 +43,7 @@ namespace API
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IDishService, DishService>();
             builder.Services.AddScoped<IBasketService, BasketService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             // Add IHttpContextAccessor for accessing HttpContext in services
             builder.Services.AddHttpContextAccessor();
