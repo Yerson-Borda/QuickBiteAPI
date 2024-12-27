@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace DTO
+namespace DTO.UserDtos
 {
     public class LoginCredentialsDto
     {

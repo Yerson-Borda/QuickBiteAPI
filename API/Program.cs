@@ -41,6 +41,12 @@ namespace API
             // Adding own business logic services
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<IDishService, DishService>();
+            builder.Services.AddScoped<IBasketService, BasketService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+
+            // Add IHttpContextAccessor for accessing HttpContext in services
+            builder.Services.AddHttpContextAccessor();
 
             // Configure JWT
             var jwtSection = builder.Configuration.GetSection("JwtBearerTokenSettings");
