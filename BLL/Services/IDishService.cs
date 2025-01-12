@@ -9,6 +9,9 @@ namespace BLL.Services
     {
         Task<PagedResponse<DishDto>> GetDishes(List<Category> categories, bool? vegetarian, Sorting? sorting, int page);
         Task<DishDto> GetDishById(Guid id);
+
+        Task<bool> CanRateDish(Guid dishId, Guid userId);
+        Task SetRating(Guid dishId, Guid userId, int ratingScore);
     }
 
     public class DishService : IDishService
@@ -125,5 +128,35 @@ namespace BLL.Services
             };
         }
 
+        public async Task<bool> CanRateDish(Guid dishId, Guid userId)
+        {
+            var dishExists = await _context.Dishes.AnyAsync(d => d.Id == dishId);
+            if (!dishExists) throw new KeyNotFoundException("Dish not found");
+
+            var hasOrdered = await _context.Order
+                .AnyAsync(o => o.UserId == userId && o.Baskets.Any(b => b.Dish.Id == dishId));
+
+            return hasOrdered;
+        }
+
+        public async Task SetRating(Guid dishId, Guid userId, int ratingScore)
+        {
+            if (ratingScore < 1 || ratingScore > 10) throw new ArgumentException("Rating must be between 1 and 10");
+
+            if (!await CanRateDish(dishId, userId))
+                throw new InvalidOperationException("User is not eligible to rate this dish");
+
+            // Add rating to database
+            var rating = new Rating
+            {
+                Id = Guid.NewGuid(),
+                DishId = dishId,
+                UserId = userId,
+                Value = ratingScore
+            };
+
+            _context.Rating.Add(rating);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -46,5 +46,51 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet("{id}/rating/check")]
+        public async Task<IActionResult> CanRateDish(Guid id)
+        {
+            try
+            {
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+                if (userId == null) return Unauthorized();
+
+                var canRate = await _dishService.CanRateDish(id, Guid.Parse(userId));
+                return Ok(canRate);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost("{id}/rating")]
+        public async Task<IActionResult> SetRating([FromRoute] Guid id, [FromQuery] int ratingScore)
+        {
+            try
+            {
+                if (ratingScore < 1 || ratingScore > 10)
+                {
+                    return BadRequest("Rating must be between 1 and 10.");
+                }
+
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized("User is not authenticated.");
+                }
+
+                await _dishService.SetRating(id, Guid.Parse(userId), ratingScore);
+                return Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
