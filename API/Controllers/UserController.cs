@@ -18,6 +18,9 @@ namespace API.Controllers
             _tokenService = tokenService;
         }
 
+        /// <summary>
+        /// Register new user
+        /// </summary>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserCreateDto model)
         {
@@ -40,6 +43,9 @@ namespace API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Log in to the system
+        /// </summary>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginCredentialsDto model)
         {
@@ -57,6 +63,9 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Log out user from the system
+        /// </summary>
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
@@ -73,6 +82,9 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get user profile
+        /// </summary>
         // Use the token generated in this case by login to go to profile
         [Authorize]
         [HttpGet("profile")]
@@ -82,6 +94,9 @@ namespace API.Controllers
             return Ok(await _usersService.GetProfile(emailClaim.Value));
         }
 
+        /// <summary>
+        /// Edit user profile
+        /// </summary>
         [Authorize]
         [HttpPut("profile")]
         public async Task<IActionResult> UpdateProfile([FromBody] EditProfileDto model)

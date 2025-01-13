@@ -17,6 +17,9 @@ namespace API.Controllers
             _orderService = orderService;
         }
 
+        /// <summary>
+        /// Gets information about concrete order
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDto>> GetOrderById(Guid id)
         {
@@ -28,6 +31,9 @@ namespace API.Controllers
             return Ok(order);
         }
 
+        /// <summary>
+        /// Get a list of orders
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<List<OrderInfoDto>>> GetUserOrders()
         {
@@ -35,6 +41,9 @@ namespace API.Controllers
             return Ok(orders);
         }
 
+        /// <summary>
+        /// Creating the order from dishes in basket
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult> CreateOrder([FromBody] OrderCreateDto orderCreateDto)
         {
@@ -46,6 +55,9 @@ namespace API.Controllers
             return Ok(new { result.OrderId });
         }
 
+        /// <summary>
+        /// Confirm order delivery
+        /// </summary>
         [HttpPost("{id}/status")]
         public async Task<ActionResult> ConfirmOrderDelivery(Guid id)
         {

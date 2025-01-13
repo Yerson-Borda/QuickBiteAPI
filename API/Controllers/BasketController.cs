@@ -18,6 +18,9 @@ namespace API.Controllers
             _basketService = basketService;
         }
 
+        /// <summary>
+        /// Gets the user's basket
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<List<DishBasketDto>>> GetUserBasket()
         {
@@ -26,6 +29,9 @@ namespace API.Controllers
             return Ok(basketItems ?? new List<DishBasketDto>());
         }
 
+        /// <summary>
+        /// Add dish to cart
+        /// </summary>
         [HttpPost("dish/{dishId}")]
         public async Task<ActionResult> AddDishToBasket(Guid dishId)
         {
@@ -33,6 +39,9 @@ namespace API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Decrease the number of dishes in the cart (if increase = true), or remove the dish completely (increase = false)
+        /// </summary>
         [HttpDelete("dish/{dishId}")]
         public async Task<ActionResult> UpdateDishInBasket(Guid dishId, [FromQuery] bool increase = false)
         {

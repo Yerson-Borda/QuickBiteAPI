@@ -15,6 +15,9 @@ namespace API.Controllers
             _dishService = dishService;
         }
 
+        /// <summary>
+        /// Get a list of dishes (menu)
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetDishes([FromQuery] List<Category> categories, [FromQuery] bool? vegetarian, [FromQuery] Sorting? sorting, [FromQuery] int page = 1)
         {
@@ -29,6 +32,9 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get information about concrete dish
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDishById(Guid id)
         {
@@ -47,6 +53,9 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks if user is able to set rating of the dish
+        /// </summary>
         [HttpGet("{id}/rating/check")]
         public async Task<IActionResult> CanRateDish(Guid id)
         {
@@ -64,6 +73,9 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Set ranting of a dish
+        /// </summary>
         [HttpPost("{id}/rating")]
         public async Task<IActionResult> SetRating([FromRoute] Guid id, [FromQuery] int ratingScore)
         {
