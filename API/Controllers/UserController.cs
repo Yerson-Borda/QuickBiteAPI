@@ -2,6 +2,7 @@
 using DTO.UserDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 
 namespace API.Controllers
@@ -21,6 +22,9 @@ namespace API.Controllers
         /// <summary>
         /// Register new user
         /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserCreateDto model)
         {
@@ -46,6 +50,9 @@ namespace API.Controllers
         /// <summary>
         /// Log in to the system
         /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginCredentialsDto model)
         {
@@ -66,6 +73,11 @@ namespace API.Controllers
         /// <summary>
         /// Log out user from the system
         /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
@@ -87,6 +99,10 @@ namespace API.Controllers
         /// </summary>
         // Use the token generated in this case by login to go to profile
         [Authorize]
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpGet("profile")]
         public async Task<IActionResult> Profile()
         {
@@ -98,6 +114,11 @@ namespace API.Controllers
         /// Edit user profile
         /// </summary>
         [Authorize]
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpPut("profile")]
         public async Task<IActionResult> UpdateProfile([FromBody] EditProfileDto model)
         {
