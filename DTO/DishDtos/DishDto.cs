@@ -22,7 +22,7 @@ namespace DTO.DishDtos
         [JsonPropertyName("vegetarian")]
         public bool IsVegetarian { get; set; }
         [JsonPropertyName("rating")]
-        public ICollection<RatingDto> Rating { get; set; }
+        public double Rating { get; set; }
         [JsonPropertyName("category")]
         public Category Category { get; set; }
     }
