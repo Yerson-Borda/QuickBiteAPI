@@ -1,6 +1,7 @@
 ﻿using BLL.Services;
 using DTO.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers
 {
@@ -15,6 +16,12 @@ namespace API.Controllers
             _dishService = dishService;
         }
 
+        /// <summary>
+        /// Get a list of dishes (menu)
+        /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<IActionResult> GetDishes([FromQuery] List<Category> categories, [FromQuery] bool? vegetarian, [FromQuery] Sorting? sorting, [FromQuery] int page = 1)
         {
@@ -29,6 +36,12 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get information about concrete dish
+        /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDishById(Guid id)
         {
@@ -47,6 +60,14 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks if user is able to set rating of the dish
+        /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpGet("{id}/rating/check")]
         public async Task<IActionResult> CanRateDish(Guid id)
         {
@@ -64,6 +85,14 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Set ranting of a dish
+        /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpPost("{id}/rating")]
         public async Task<IActionResult> SetRating([FromRoute] Guid id, [FromQuery] int ratingScore)
         {

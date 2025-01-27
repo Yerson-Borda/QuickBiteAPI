@@ -76,15 +76,10 @@ namespace BLL.Services
                     Price = d.Price,
                     ImageUrl = d.ImageUrl,
                     IsVegetarian = d.IsVegetarian,
-                    Rating = d.RatingList.Select(r => new RatingDto
-                    {
-                        DishId = r.DishId,
-                        Value = r.Value
-                    }).ToList(),
+                    Rating = d.RatingList.Any() ? d.RatingList.Average(r => r.Value) : 0,
                     Category = d.Category
                 })
                 .ToListAsync();
-
 
             var response = new PagedResponse<DishDto>
             {
@@ -103,7 +98,7 @@ namespace BLL.Services
         public async Task<DishDto> GetDishById(Guid id)
         {
             var dish = await _context.Dishes
-                .Include(d => d.RatingList) // Include RatingList to load related ratings
+                .Include(d => d.RatingList)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             if (dish == null)
@@ -119,11 +114,7 @@ namespace BLL.Services
                 Price = dish.Price,
                 ImageUrl = dish.ImageUrl,
                 IsVegetarian = dish.IsVegetarian,
-                Rating = dish.RatingList.Select(r => new RatingDto
-                {
-                    DishId = r.DishId,
-                    Value = r.Value
-                }).ToList(),
+                Rating = dish.RatingList.Any() ? dish.RatingList.Average(r => r.Value) : 0,
                 Category = dish.Category
             };
         }

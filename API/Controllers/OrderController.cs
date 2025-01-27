@@ -2,6 +2,7 @@
 using DTO.OrderDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers
 {
@@ -17,6 +18,14 @@ namespace API.Controllers
             _orderService = orderService;
         }
 
+        /// <summary>
+        /// Gets information about concrete order
+        /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDto>> GetOrderById(Guid id)
         {
@@ -28,6 +37,14 @@ namespace API.Controllers
             return Ok(order);
         }
 
+        /// <summary>
+        /// Get a list of orders
+        /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<ActionResult<List<OrderInfoDto>>> GetUserOrders()
         {
@@ -35,6 +52,14 @@ namespace API.Controllers
             return Ok(orders);
         }
 
+        /// <summary>
+        /// Creating the order from dishes in basket
+        /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpPost]
         public async Task<ActionResult> CreateOrder([FromBody] OrderCreateDto orderCreateDto)
         {
@@ -46,6 +71,14 @@ namespace API.Controllers
             return Ok(new { result.OrderId });
         }
 
+        /// <summary>
+        /// Confirm order delivery
+        /// </summary>
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         [HttpPost("{id}/status")]
         public async Task<ActionResult> ConfirmOrderDelivery(Guid id)
         {
