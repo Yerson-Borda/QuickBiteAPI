@@ -87,10 +87,6 @@ namespace BLL.Services
 
             if (increase)
             {
-                basketItem.Count++;
-            }
-            else
-            {
                 if (basketItem.Count > 1)
                 {
                     basketItem.Count--;
@@ -99,6 +95,10 @@ namespace BLL.Services
                 {
                     _context.Baskets.Remove(basketItem);
                 }
+            }
+            else
+            {
+                _context.Baskets.Remove(basketItem);
             }
 
             await _context.SaveChangesAsync();

@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         /// <summary>
-        /// Update dish in basket
+        /// Decrease the number of dishes in the cart (if increase = true), or remove the dish completely(increase = false)
         /// </summary>
         [SwaggerResponse(StatusCodes.Status200OK, "Dish successfully updated in the basket.")]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "User is not authenticated.")]
